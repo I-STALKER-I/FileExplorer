@@ -6,9 +6,10 @@ from typing import Any
 import pygame
 import threading
 import multiprocessing
+from multiprocessing import Barrier
 import os
 import time
-
+from multiprocessing.context import Process
 
 class pages :
 
@@ -157,11 +158,10 @@ def outer_2() :
                     back_button.history.append(os.getcwd())
                     try :
                         os.chdir(direc._path)
+                        loader()
                     except PermissionError :
                         print("not allowed to go to this file")
-                    lst = os.listdir(os.getcwd())
-                    directory_list(lst)
-                    page_changer(None)
+
                 else :
                     os.system('"%s"' % direc._path)
 
@@ -318,9 +318,7 @@ class forward_back_button(pygame.sprite.Sprite) :
                     self.instance.history.append(os.getcwd())
                     os.chdir(self.history[len(self.history)- 1])
                     self.history.pop(len(self.history) - 1)
-                    lst = os.listdir(os.getcwd())
-                    directory_list(lst)
-                    page_changer(None)
+                    loader()
                     self.timer = 0
 
 
@@ -369,6 +367,8 @@ def outer() :
             pages.pages_list.append(pages(page))
     
 
+        return pages.pages_list
+
     return directory_list
 
 
@@ -395,68 +395,102 @@ def display_dir() :
     except IndexError :
         pass
 
+def folder_loader(lst,page_changer) :
+    directory_list(lst)
+    page_changer(None)
+
+
+    return 0
+
+def loader() :
+    lst = os.listdir(os.getcwd())
+    thread = threading.Thread(target = folder_loader,args = (lst,page_changer))
+    thread.start()
+
+    while True :
+        
+        if thread.is_alive() == False :
+            screen.fill('white')
+            break
+        
+
+        loading_group.draw(screen)
+        loading_group.update()
+        pygame.display.flip()
+        pygame.display.update()
+        screen.fill('white')
+        
+        clock.tick(60)
+        
+
+    return 0
+
+
 
 os.chdir('H:\\')        
 
+def main() :
+    global screen ,mouse_pos ,event ,page_index ,loading_group,clock
+    pygame.init()
 
 
-pygame.init()
 
 
+    screen = pygame.display.set_mode((600,400))
+    screen.fill('white')
+    pygame.display.set_caption('FileExplorer')
+    clock = pygame.time.Clock()
 
 
-screen = pygame.display.set_mode((600,400))
-screen.fill('white')
-pygame.display.set_caption('FileExplorer')
-clock = pygame.time.Clock()
-
-
-#dirlist = os.listdir(os.getcwd())
-dirlist = os.listdir(os.getcwd())
-directory_list(dirlist)
-mouse_pos = pygame.mouse.get_pos()
-page_index = 0
-
-display_dir()
-
-
-left_page_button = pagebuttons(pos_x=310 ,pos_y=370 ,link='H:\AP projects\FileExplorer\icons\wiggelingbutton(left)animation')
-right_page_button = pagebuttons(pos_x=340,pos_y=370,link= 'H:\AP projects\FileExplorer\icons\wigglebutton(right)')
-buttons_group  = pygame.sprite.Group()
-buttons_group.add(left_page_button)
-buttons_group.add(right_page_button)
-
-laoding = loading_icon()
-loading_group = pygame.sprite.Group()
-loading_group.add(loading_icon())
-
-
-_forward = forward_button()
-_back = back_button()
-_forward.instance = _back
-_back.instance = _forward
-forward_back_button_group = pygame.sprite.Group()
-forward_back_button_group.add(_forward)
-forward_back_button_group.add(_back)
-
-while True :
-    for event in pygame.event.get() :
-        if event.type == pygame.QUIT :
-            pygame.quit()
-            exit()
-
+    #dirlist = os.listdir(os.getcwd())
+    dirlist = os.listdir(os.getcwd())
+    directory_list(dirlist)
     mouse_pos = pygame.mouse.get_pos()
+    page_index = 0
+
     display_dir()
+
+
+    left_page_button = pagebuttons(pos_x=310 ,pos_y=370 ,link='H:\AP projects\FileExplorer\icons\wiggelingbutton(left)animation')
+    right_page_button = pagebuttons(pos_x=340,pos_y=370,link= 'H:\AP projects\FileExplorer\icons\wigglebutton(right)')
+    buttons_group  = pygame.sprite.Group()
+    buttons_group.add(left_page_button)
+    buttons_group.add(right_page_button)
+
+    laoding = loading_icon()
+    loading_group = pygame.sprite.Group()
+    loading_group.add(loading_icon())
+
+
+    _forward = forward_button()
+    _back = back_button()
+    _forward.instance = _back
+    _back.instance = _forward
+    forward_back_button_group = pygame.sprite.Group()
+    forward_back_button_group.add(_forward)
+    forward_back_button_group.add(_back)
+
+    while True :
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
+                pygame.quit()
+                exit()
+
+        mouse_pos = pygame.mouse.get_pos()
+        display_dir()
     
 
     
-    clock.tick(60)
-    buttons_group.draw(screen)
-    buttons_group.update()    
+        clock.tick(60)
+        buttons_group.draw(screen)
+        buttons_group.update()    
 
-    forward_back_button_group.draw(screen)
-    forward_back_button_group.update()
+        forward_back_button_group.draw(screen)
+        forward_back_button_group.update()
 
-    pygame.display.flip()
-    pygame.display.update()
-    screen.fill(color='white')
+
+        pygame.display.flip()
+        pygame.display.update()
+        screen.fill(color='white')
+if __name__ == '__main__' :
+    main()
