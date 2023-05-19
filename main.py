@@ -466,7 +466,6 @@ def outer() :
 
     return directory_list
 
-
 #hidden files and folders shower ================================================
 class hidden_button(pygame.sprite.Sprite) :
     def __init__(self) :
@@ -537,12 +536,19 @@ def file_loader(path) :
 
     os.system('"%s"' % path)
 
+def search_loader(lst) :
+    directory_list(lst)
+    page_changer(None)
+
+
 
 def loader(flag,*args) :
     if flag == 'folder' :
         thread = threading.Thread(target = folder_loader)
-    else :
+    elif flag == 'file' :
         thread = threading.Thread(target=file_loader,args = (args))
+    else :
+        thread = threading.Thread(target=search_loader,args = (args))
 
     thread.start()
 
@@ -865,14 +871,317 @@ class paste(shared_memory) :
 class rename(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
+        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\Rename(unactive).png")
+        self.rect = self.image.get_rect(topleft = (240,356))
+        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\Rename(active).png')
+        self.unactive_icon = self.image
+        self.thread = None
+
+        self.timer = 0
+        self.flag = False
+    
+
+    def update(self) :
+        if self.flag == False :
+            if self.rect.collidepoint(mouse_pos) and len(directory.selected_files_folders) > 0:
+                self.image = self.active_icon
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.timer > 13 :
+                    self.timer = 0
+                    if len(directory.selected_files_folders) > 1 :
+                        thread = threading.Thread(target = self.to_many_selected)
+                        thread.start()
+                
+                    elif len(directory.selected_files_folders) == 1 :
+                        if self.thread == None or self.thread.is_alive() == False :
+                            self.thread = threading.Thread(target = self.renaiming,args=(directory.selected_files_folders[0],))
+                            self.thread.start() 
+                            directory.selected_files_folders = []
+
+            else :
+                self.image = self.unactive_icon
+
+        if self.timer <= 14 :
+            self.timer += 1
+
+        
+    @staticmethod
+    def to_many_selected() :
+        for i in range(200) :
+            screen.blit(pygame.font.SysFont("Arial", 10).render('cannot rename multiple files',True,'black'),(250,360))
+            clock.tick(60)
+
+    @staticmethod
+    def renaiming(direc) :
+        rect_renaming.rect = rect_renaming.image.get_rect(topleft = (direc.name_id[1][0] - 1,direc.name_id[1][1] - 3))
+        while True :
+            if renaming_rect.flag == False :
+                renaming_rect.flag = True
+                break
+
+
+            rect_group.draw(screen)
+            rect_group.update(direc.name_id[1],direc)
+            clock.tick(60)
+        
+                
+
+class renaming_rect(pygame.sprite.Sprite) :
+    flag = True
+    def __init__(self) :
+        super().__init__()
+        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\\rename.png")
+        self.rect = self.image.get_rect()
+        self.timer = 0
+        self.text = ''
+        self.first_text = True
+
+    def update(self,location,direc) :
+        screen.blit(pygame.font.SysFont("Arial", 10).render(self.text,True,'black'),(location[0] + 3,location[1]))
+        if self.timer > 13 :
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                renaming_rect.flag = False
+                self.timer = 0
+
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE :
+                self.text = self.text[:-1]
+                self.timer = 0
+
+
+            elif event.type == pygame.TEXTINPUT :
+                    
+                    
+                self.text += event.text 
+                self.timer = 0
+
+            elif event.type == pygame.KEYDOWN and event.key == 13 :
+                self.timer = 0
+                renaming_rect.flag = False
+                direc.name_id = pygame.font.SysFont("Arial", 10).render(self.text,True,'black'),direc.name_id[1]
+                try :
+                    old_name = direc._name + direc.file_type
+            
+                    direc._name = self.text + direc.file_type
+                    direc._path = self.text + direc.file_type
+
+                    new_name = self.text + direc.file_type
+                except AttributeError :
+                    old_name = direc._name
+
+                    direc._name = self.text
+                    direc._path = self.text
+
+                    new_name = self.text
+                os.system(f'ren "{old_name}" "{new_name}"')
+                
+
+
+                
+        
+        if self.timer <= 13 :
+            self.timer += 1
+
+        
+class ext(pygame.sprite.Sprite) :
+    def __init__(self) :
+        super().__init__()
+        self.image =  pygame.image.load("H:\AP projects\FileExplorer\icons\ext(unactive).png")
+        self.rect = self.image.get_rect(topleft = (500,20))
+        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\ext(active).png')
+        self.unactive_icon = self.image
+        self.flag = False
+        self.timer = 0
+
+    def update(self) :
+        if self.rect.collidepoint(mouse_pos) :
+            if self.timer > 13 : 
+                if event.type == pygame.MOUSEBUTTONDOWN :
+                    self.timer = 0
+
+                    self.flag =  not self.flag
+
+
+                    if self.flag == True :
+                        thread = threading.Thread(target = self.ext_show) 
+                        thread.start()
+
+                    else :
+                        thread = threading.Thread(target=self.ext_unshow)
+                        thread.start()
+                
+            self.image = self.active_icon
+
+        
+        else :
+            if self.flag == False :
+
+                self.image = self.unactive_icon
 
 
 
+
+
+        if self.timer <= 14 :
+            self.timer += 1
+
+
+    @staticmethod
+    def ext_show() :
+        for page in pages.pages_list :
+            for doc in page._directories :
+                try :
+                    doc.name_id = pygame.font.SysFont("Arial", 10).render(doc._name + doc.file_type,True,'black'),doc.name_id[1]
+
+                except AttributeError :
+                    pass
+    @staticmethod
+    def ext_unshow() :
+        for page in pages.pages_list :
+            for doc in page._directories :
+                try :
+                    doc.name_id = pygame.font.SysFont("Arial", 10).render(doc._name,True,'black'),doc.name_id[1]
+                except AttributeError :
+                    pass
+
+
+# search -------------------------------------------------------------------------
+class search(pygame.sprite.Sprite) :
+    matches = []
+    child_threads = []
+    def __init__(self) :
+        super().__init__()
+        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\search(unactive).png')
+        self.rect = self.image.get_rect(topright = (585,370))
+        self.timer = 0 
+        self.flag = False
+        self.text = "search here"
+        self.mutex = threading.Lock()
+
+    def update(self) :
+        screen.blit(pygame.font.SysFont("Arial", 10).render(self.text,True,'black'),(430,375))
+
+
+        if self.flag == False :
+            self.text = "search here(max 31 digit & word)"
+            if self.rect.collidepoint(mouse_pos) :
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.timer > 13:
+                    self.flag = True
+                    self.text = ''
+                    self.timer = 0
+                    
+
+        else :
+            if search_button.flag == True :
+                if len(self.text) > 0 :
+                    _search_button.image = _search_button.active_icon
+                else :
+                    _search_button.image = _search_button.unactive_icon
+
+                if self.timer > 13 :
+                    if event.type == pygame.TEXTINPUT and len(self.text) < 31:
+                        self.text += event.text
+                        self.timer = 0
+
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE :
+                        self.text = self.text[:-1]
+                        self.timer = 0
+            
+                    elif event.type == pygame.KEYDOWN and event.key == 13 :
+                        if len(self.text) == 0 :
+                            _search_button.image = _search_button.unactive_icon
+                            self.flag = False
+                            self.timer = 0
+
+                        else :
+                            search.matches = []
+                            search.child_threads = []
+                            _search_button.image = _search_button.unactive_icon
+                            self.flag = False
+                            self.timer = 0 
+                            thread = threading.Thread(target = self.searching ,args = (os.getcwd(),self.text))
+                            thread.start()
+
+                            while thread.is_alive() :
+                                for events in pygame.event.get() :
+                                    if events.type == pygame.QUIT :
+                                        pygame.quit()
+                                        exit()
+
+                                loading_group.draw(screen)
+                                loading_group.update()
+                                pygame.display.flip()
+                                pygame.display.update()
+                                screen.fill('white')
+                                clock.tick(60)
+
+                            loader("search",search.matches)
+                            
+
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+                    if self.rect.collidepoint(mouse_pos) == False :
+                        self.flag = False 
+
+            else :
+                search_button.flag = True
+                self.flag = False
+
+        if self.timer <= 13 :
+            self.timer += 1
+
+    def searching(self,root,filename) :
+        
+        #print('Searching in:', root)
+        
+        try :
+            for file in os.listdir(root):
+                full_path = os.path.join(root, file)  # concatenates root with file
+                if filename in file:
+                    self.mutex.acquire()  # mutex
+                    search.matches.append(full_path)
+                    self.mutex.release()  # mutex
+                if os.path.isdir(full_path):
+                    t = threading.Thread(target=self.searching, args=(full_path, filename))
+                    t.start()
+                    search.child_threads.append(t)
+        except Exception :
+            pass
+            for thread in search.child_threads:
+                thread.join()
+
+
+
+
+
+
+                
+class search_button(pygame.sprite.Sprite) :
+    flag = True
+    def __init__(self) :
+        super().__init__()
+        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\search_button(unactive).png")
+        self.rect = self.image.get_rect(topright = (585,370))
+        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\search_button(active).png")
+        self.unactive_icon = self.image
+        self.timer = 0
+    def update(self) :
+        if self.timer > 13 :
+            if self.rect.collidepoint(mouse_pos) :
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+                    search_button.flag = False
+                    self.image = self.unactive_icon
+
+        
+        if self.timer <= 13 :
+            self.timer += 1
+
+
+
+        
 
 os.chdir('H:\\')        
 
 def main() :
-    global screen ,mouse_pos ,event ,page_index ,loading_group,clock ,folder_typing_group
+    global screen ,mouse_pos ,event ,page_index ,loading_group,clock ,folder_typing_group ,rect_group ,rect_renaming ,_search_button
     pygame.init()
 
 
@@ -912,8 +1221,18 @@ def main() :
 
 
     hidden = hidden_button()
-    hidden_group = pygame.sprite.Group()
-    hidden_group.add(hidden)
+    Rename = rename()
+    ext_ = ext()
+    _search = search()
+    _search_button = search_button()
+    
+    feature_group = pygame.sprite.Group()
+    feature_group.add(hidden,Rename,ext_,_search,_search_button)
+
+
+    rect_renaming = renaming_rect()
+    rect_group = pygame.sprite.Group()
+    rect_group.add(rect_renaming)
 
 
     new_file_make = new_file()
@@ -955,8 +1274,8 @@ def main() :
         forward_back_button_group.draw(screen)
         forward_back_button_group.update()
 
-        hidden_group.draw(screen)
-        hidden_group.update()
+        feature_group.draw(screen)
+        feature_group.update()
 
 
         new_file_group.draw(screen)
