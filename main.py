@@ -92,14 +92,14 @@ class file(directory,pygame.sprite.Sprite) :
         
         super().__init__(name) 
         pygame.sprite.Sprite.__init__(self)
-        self.cut_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\documenticon_cut.png')
+        self.cut_icon = pygame.image.load(f'{source}\icons\\documenticon_cut.png')
         self._file_type = self._path
-        self.image = pygame.image.load('H:\\AP projects\\FileExplorer\\icons\\documenticon.png')
+        self.image = pygame.image.load(f'{source}\\icons\\documenticon.png')
         self.rect = self.image.get_rect(topleft = (120,pixel_distance))
         self.rect.left  = 75
         self.name_id = pygame.font.SysFont("Arial", 10).render(self._name,True,'black'),(120,pixel_distance + 2)
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\documenticon(selected).png')
+        self.active_icon = pygame.image.load(f'{source}\icons\\documenticon(selected).png')
 
 
     @property
@@ -139,7 +139,7 @@ class file(directory,pygame.sprite.Sprite) :
         if self.Lock == False :
             if directory.timer > directory.timer_counter :
                 if self.rect.collidepoint(mouse_pos) == True :
-                    commitsonfiles(self,pygame.image.load('H:\AP projects\FileExplorer\icons\\documenticon(selected).png'))
+                    commitsonfiles(self,pygame.image.load(f'{source}\icons\\documenticon(selected).png'))
 
             directory.timer += 1
 
@@ -166,15 +166,15 @@ class folder(directory,pygame.sprite.Sprite) :
     def __init__(self,name,pixel_distance) :
         super().__init__(name)
         pygame.sprite.Sprite.__init__(self)
-        self.cut_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\foldericon_cut.png')
+        self.cut_icon = pygame.image.load(f'{source}\icons\\foldericon_cut.png')
         self._file_type = "None"
         self.image = None
-        self.image = pygame.image.load('H:\\AP projects\\FileExplorer\\icons\\foldericon.png')
+        self.image = pygame.image.load(f'{source}\\icons\\foldericon.png')
         self.rect = self.image.get_rect(topleft = (120,pixel_distance))
         self.rect.left = 75
         self.name_id = pygame.font.SysFont("Arial", 10).render(self._name,True,'black'),(120,pixel_distance + 2 )
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\foldericon(selected).png')
+        self.active_icon = pygame.image.load(f'{source}\icons\\foldericon(selected).png')
         
 
     @property
@@ -194,7 +194,7 @@ class folder(directory,pygame.sprite.Sprite) :
         if self.Lock == False :
             if directory.timer > directory.timer_counter :
                 if self.rect.collidepoint(mouse_pos) == True :
-                    commitsonfiles(self,pygame.image.load('H:\AP projects\FileExplorer\icons\\foldericon(selected).png'))
+                    commitsonfiles(self,pygame.image.load(f'{source}\icons\\foldericon(selected).png'))
             directory.timer += 1
 
     def __eq__(self,value) :
@@ -366,8 +366,8 @@ class pagebuttons(pygame.sprite.Sprite) :
 class loading_icon(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load("H:\\AP projects\\FileExplorer\\laodings\\loading00.png")
-        self._frames = "H:\\AP projects\\FileExplorer\\laodings"
+        self.image = pygame.image.load(f"{source}\\laodings\\loading00.png")
+        self._frames = f"{source}\\laodings"
         self.frame_index = 0
         self.rect = self.image.get_rect()
 
@@ -381,7 +381,7 @@ class loading_icon(pygame.sprite.Sprite) :
         frames_png = []
         pngs = os.listdir(link)
         for png in pngs :
-            frames_png.append(pygame.image.load('H:\\AP projects\\FileExplorer\\laodings\\' + png))
+            frames_png.append(pygame.image.load(f'{source}\\laodings\\' + png))
 
         self.frames = frames_png
 
@@ -432,10 +432,10 @@ class forward_button(forward_back_button) :
     history = []
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconrightnowork.png')
-        self.unactive_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconrightnowork.png')
-        self.active_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttonicon.png')
-        self.collision_with_active_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconrightcollision.png')
+        self.image = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconrightnowork.png')
+        self.unactive_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconrightnowork.png')
+        self.active_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttonicon.png')
+        self.collision_with_active_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconrightcollision.png')
         self.rect = self.image.get_rect(topleft = (60,20))
 
 
@@ -444,10 +444,10 @@ class back_button(forward_back_button) :
     history = []
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconleftnowork.png')
-        self.unactive_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconleftnowork.png')
-        self.active_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconleft.png')
-        self.collision_with_active_button = pygame.image.load('H:\AP projects\FileExplorer\icons\\backbuttonicon\\backbuttoniconcollisionleft.png')
+        self.image = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconleftnowork.png')
+        self.unactive_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconleftnowork.png')
+        self.active_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconleft.png')
+        self.collision_with_active_button = pygame.image.load(f'{source}\icons\\backbuttonicon\\backbuttoniconcollisionleft.png')
         self.rect = self.image.get_rect(topleft = (20,20))
 
 def outer() :
@@ -470,9 +470,9 @@ def outer() :
 class hidden_button(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\featureicons\hidden_files_icon(unactive).png')
+        self.image = pygame.image.load(f'{source}\icons\\featureicons\hidden_files_icon(unactive).png')
         self.flag = True
-        self.next_image = pygame.image.load('H:\AP projects\FileExplorer\icons\\featureicons\hidden_files_icon(active).png')
+        self.next_image = pygame.image.load(f'{source}\icons\\featureicons\hidden_files_icon(active).png')
         self.rect = self.image.get_rect(topleft = (120,25))
         self.timer = 0
 
@@ -595,9 +595,9 @@ class new_file(pygame.sprite.Sprite) :
     flag = False
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\newfolder.png')
-        self.active_image = pygame.image.load('H:\AP projects\FileExplorer\icons\\newfolder(active).png')
-        self.unactive_image = pygame.image.load('H:\AP projects\FileExplorer\icons\\newfolder.png')
+        self.image = pygame.image.load(f'{source}\icons\\newfolder.png')
+        self.active_image = pygame.image.load(f'{source}\icons\\newfolder(active).png')
+        self.unactive_image = pygame.image.load(f'{source}\icons\\newfolder.png')
         self.rect = self.image.get_rect(topleft = (170,20))
         self.timer = 0
         self.thread = None
@@ -628,9 +628,9 @@ class new_file(pygame.sprite.Sprite) :
 class folder_typing_gui(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinput.png')
-        self.non_active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinput.png')
-        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinput(active).png')
+        self.image = pygame.image.load(f'{source}\icons\\filenameinput.png')
+        self.non_active_icon = pygame.image.load(f'{source}\icons\\filenameinput.png')
+        self.active_icon = pygame.image.load(f'{source}\icons\\filenameinput(active).png')
         self.rect = self.image.get_rect(topleft = (220,15))
         self.flag = False
         self.txt = ''
@@ -677,9 +677,9 @@ class folder_typing_gui(pygame.sprite.Sprite) :
 class fodler_typing_gui_exit(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__() 
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinputexitbutton.png')
-        self.non_active_image = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinputexitbutton.png')
-        self.active_image = pygame.image.load('H:\AP projects\FileExplorer\icons\\filenameinputexitbutton(acitve).png')
+        self.image = pygame.image.load(f'{source}\icons\\filenameinputexitbutton.png')
+        self.non_active_image = pygame.image.load(f'{source}\icons\\filenameinputexitbutton.png')
+        self.active_image = pygame.image.load(f'{source}\icons\\filenameinputexitbutton(acitve).png')
         self.rect = self.image.get_rect(topleft = (390,13))
 
     def update(self) :
@@ -696,10 +696,10 @@ class fodler_typing_gui_exit(pygame.sprite.Sprite) :
 class recyclebin(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\\recyclebin.png")
+        self.image = pygame.image.load(f"{source}\icons\\recyclebin.png")
         self.rect = self.image.get_rect(topleft = (80,360))
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\\recyclebin(active).png")
+        self.active_icon = pygame.image.load(f"{source}\icons\\recyclebin(active).png")
         self.timer = 0
 
     def update(self) :
@@ -709,7 +709,7 @@ class recyclebin(pygame.sprite.Sprite) :
                 if event.type == pygame.MOUSEBUTTONDOWN and self.timer > 13 :
                     """removing files was risky and it could harm the drives so instead im moving the files to a folder named recyclebin"""
                     for file in directory.selected_files_folders :
-                        os.system(f'move "{file._path}" H:\\"{"AP projects"}"\\FileExplorer\\recyclebin') 
+                        os.system(f'move "{file._path}" "{source}"\\recyclebin') 
 
                     loader('folder')
                     directory.selected_files_folders = []
@@ -754,9 +754,9 @@ class cut(shared_memory) :
     def __init__(self) :
         
         super().__init__() 
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\cutcopypaste\cut(unactive).png')
+        self.image = pygame.image.load(f'{source}\icons\cutcopypaste\cut(unactive).png')
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\cutcopypaste\cut(active).png")
+        self.active_icon = pygame.image.load(f"{source}\icons\cutcopypaste\cut(active).png")
         self.rect = self.image.get_rect(topleft = (120,360))
         self.__name__ = cut.__name__
 
@@ -790,9 +790,9 @@ def cutted_file_folder_to_unactive(memory) :
 class copy(shared_memory) :
     def __init__(self) :
         super().__init__() 
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\cutcopypaste\copy(unactive).png')
+        self.image = pygame.image.load(f'{source}\icons\cutcopypaste\copy(unactive).png')
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\cutcopypaste\copy(active).png")
+        self.active_icon = pygame.image.load(f"{source}\icons\cutcopypaste\copy(active).png")
         self.rect = self.image.get_rect(topleft = (160,360))
         self.__name__ = copy.__name__
 
@@ -805,9 +805,9 @@ class copy(shared_memory) :
 class paste(shared_memory) :
     def __init__(self) :
         super().__init__() 
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\cutcopypaste\past(unactive).png')
+        self.image = pygame.image.load(f'{source}\icons\cutcopypaste\past(unactive).png')
         self.unactive_icon = self.image
-        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\cutcopypaste\past(active).png")
+        self.active_icon = pygame.image.load(f"{source}\icons\cutcopypaste\past(active).png")
         self.rect = self.image.get_rect(topleft = (200,360))
         self.__name__ = paste.__name__
 
@@ -871,9 +871,9 @@ class paste(shared_memory) :
 class rename(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\Rename(unactive).png")
+        self.image = pygame.image.load(f"{source}\icons\Rename(unactive).png")
         self.rect = self.image.get_rect(topleft = (240,356))
-        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\Rename(active).png')
+        self.active_icon = pygame.image.load(f'{source}\icons\Rename(active).png')
         self.unactive_icon = self.image
         self.thread = None
 
@@ -929,7 +929,7 @@ class renaming_rect(pygame.sprite.Sprite) :
     flag = True
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\\rename.png")
+        self.image = pygame.image.load(f"{source}\icons\\rename.png")
         self.rect = self.image.get_rect()
         self.timer = 0
         self.text = ''
@@ -985,9 +985,9 @@ class renaming_rect(pygame.sprite.Sprite) :
 class ext(pygame.sprite.Sprite) :
     def __init__(self) :
         super().__init__()
-        self.image =  pygame.image.load("H:\AP projects\FileExplorer\icons\ext(unactive).png")
+        self.image =  pygame.image.load(f"{source}\icons\ext(unactive).png")
         self.rect = self.image.get_rect(topleft = (500,20))
-        self.active_icon = pygame.image.load('H:\AP projects\FileExplorer\icons\ext(active).png')
+        self.active_icon = pygame.image.load(f'{source}\icons\ext(active).png')
         self.unactive_icon = self.image
         self.flag = False
         self.timer = 0
@@ -1050,7 +1050,7 @@ class search(pygame.sprite.Sprite) :
     child_threads = []
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load('H:\AP projects\FileExplorer\icons\search(unactive).png')
+        self.image = pygame.image.load(f'{source}\icons\search(unactive).png')
         self.rect = self.image.get_rect(topright = (585,370))
         self.timer = 0 
         self.flag = False
@@ -1158,9 +1158,9 @@ class search_button(pygame.sprite.Sprite) :
     flag = True
     def __init__(self) :
         super().__init__()
-        self.image = pygame.image.load("H:\AP projects\FileExplorer\icons\search_button(unactive).png")
+        self.image = pygame.image.load(f"{source}\icons\search_button(unactive).png")
         self.rect = self.image.get_rect(topright = (585,370))
-        self.active_icon = pygame.image.load("H:\AP projects\FileExplorer\icons\search_button(active).png")
+        self.active_icon = pygame.image.load(f"{source}\icons\search_button(active).png")
         self.unactive_icon = self.image
         self.timer = 0
     def update(self) :
@@ -1175,10 +1175,56 @@ class search_button(pygame.sprite.Sprite) :
             self.timer += 1
 
 
+source = os.getcwd()
 
+class quickaccess(pygame.sprite.Sprite) :
+    distance = 80
+    def __init__(self,name,path) :
+        super().__init__()
+        self.timer = 0
+        self.name = name
+        self.path = path
+        self.image = pygame.image.load(f"{source}\icons\disk.png")
+        self.unactive_icon = pygame.image.load(f"{source}\icons\disk.png")
+        self.active_icon = pygame.image.load(f"{source}\icons\disk(active).png")
+        self.rect = self.image.get_rect(topleft = (5,quickaccess.distance))
+        self.name_show = pygame.font.SysFont("Arial", 15).render(self.name,True,'black'),(40,quickaccess.distance - 5)
+        quickaccess.distance += 20
+
+    def update(self) :
+        print(self.timer)
+        screen.blit(self.name_show[0],self.name_show[1])
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.timer >= 13 :
+            if self.rect.collidepoint(mouse_pos) :
+                self.image = self.active_icon
+                os.chdir(self.path)
+                loader("folder")
+                self.timer = 0
+            
+            else :
+                self.image = self.unactive_icon
+
+
+
+        if self.timer <= 14 :
+            self.timer += 1
+
+
+quickaccess_group = pygame.sprite.Group()
+
+def quickaccess_check() :
+    if os.path.isdir("C:") :
+        quickaccess_group.add(quickaccess("C","C:"))
         
+    
+    if os.path.isdir("D:") :
+        quickaccess_group.add(quickaccess("D","D:"))
 
-os.chdir('H:\\')        
+    if os.path.isdir("H:") :
+        quickaccess_group.add(quickaccess("H","H:"))
+
+
+
 
 def main() :
     global screen ,mouse_pos ,event ,page_index ,loading_group,clock ,folder_typing_group ,rect_group ,rect_renaming ,_search_button
@@ -1201,8 +1247,8 @@ def main() :
     display_dir()
 
 
-    left_page_button = pagebuttons(pos_x=310 ,pos_y=370 ,link='H:\AP projects\FileExplorer\icons\wiggelingbutton(left)animation')
-    right_page_button = pagebuttons(pos_x=340,pos_y=370,link= 'H:\AP projects\FileExplorer\icons\wigglebutton(right)')
+    left_page_button = pagebuttons(pos_x=310 ,pos_y=370 ,link=f'{source}\icons\wiggelingbutton(left)animation')
+    right_page_button = pagebuttons(pos_x=340,pos_y=370,link= f'{source}\icons\wigglebutton(right)')
     buttons_group  = pygame.sprite.Group()
     buttons_group.add(left_page_button)
     buttons_group.add(right_page_button)
@@ -1253,6 +1299,9 @@ def main() :
     movement_group = pygame.sprite.Group()
     movement_group.add(recycle_bin,cut_mov,copy_mov,paste_mov)
 
+
+    quickaccess_check()
+
     while True :
         for event in pygame.event.get() :
             if event.type == pygame.QUIT :
@@ -1284,6 +1333,8 @@ def main() :
         movement_group.draw(screen)
         movement_group.update()
 
+        quickaccess_group.draw(screen)
+        quickaccess_group.update()
 
         pygame.display.flip()
         pygame.display.update()
